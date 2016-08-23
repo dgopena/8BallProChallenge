@@ -52,6 +52,7 @@ public class PlayerScript : MonoBehaviour {
         {
             if (Physics.Raycast(ray, out hit))
             {
+                Debug.Log("hello");
                 tapFinishPos = new Vector3(hit.point.x, 0.5f, hit.point.z);
 
                 cue.SetActive(true);

@@ -63,6 +63,7 @@ public class StickScript : MonoBehaviour {
             if (fracJourney > 1)
             {
                 movePhase = 0;
+                hitTarget = null; //we clear the target
                 gameObject.SetActive(false);
             }
         }

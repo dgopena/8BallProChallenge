@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum BallDistribution
+{
+    Random,
+    Triangle,
+    Central
+}
+
 public class TableScript : MonoBehaviour {
     //Probably will be intended for board generation and distribution
 
@@ -16,6 +23,8 @@ public class TableScript : MonoBehaviour {
 
     #region Generation variables
     public float ballDisplace = 6f;
+    public BallDistribution dist;
+    public Vector3 ballCenter;
     #endregion
 
     // Use this for initialization
@@ -31,17 +40,27 @@ public class TableScript : MonoBehaviour {
 
     void GenerateBalls()
     {
-        // Instantiate Cue
-        cue = (GameObject)Instantiate(ball);
-        cue.GetComponent<Renderer>().material = (Material)Resources.Load("Materials/Balls/Cue", typeof(Material));
-
-        //Instantiate the rest of the balls randomly
-        for(int i=0; i<14; i++)
+        if (dist == BallDistribution.Random)
         {
-            GameObject aux = (GameObject)Instantiate(ball);
-            aux.GetComponent<Renderer>().material = (Material)Resources.Load("Materials/Balls/"+(i+1), typeof(Material));
-            balls[i] = aux;
-            aux.transform.position = new Vector3(Random.Range(-ballDisplace, ballDisplace), aux.transform.position.y, Random.Range(-ballDisplace, ballDisplace));
+            // Instantiate Cue
+            cue = (GameObject)Instantiate(ball);
+            cue.GetComponent<Renderer>().material = (Material)Resources.Load("Materials/Balls/Cue", typeof(Material));
+
+            //Instantiate the rest of the balls randomly
+            for (int i = 0; i < 15; i++)
+            {
+                GameObject aux = (GameObject)Instantiate(ball);
+                aux.GetComponent<Renderer>().material = (Material)Resources.Load("Materials/Balls/" + (i + 1), typeof(Material));
+                balls[i] = aux;
+                aux.transform.position = new Vector3(Random.Range(-ballDisplace, ballDisplace), aux.transform.position.y, Random.Range(-ballDisplace, ballDisplace));
+            }
+        }
+        else if(dist == BallDistribution.Triangle){
+
+        }
+        else if(dist == BallDistribution.Central)
+        {
+
         }
     }
 }
