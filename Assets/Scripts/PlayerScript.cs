@@ -14,7 +14,7 @@ public class PlayerScript : MonoBehaviour {
 
     #region Play variables
     public float hitMaxForce = 200f;
-    public float hitMaxDist = 6f;
+    public float hitMaxDist = 10f;
     private Vector3 dir;
 
     private GameObject cue; //stick
@@ -52,7 +52,6 @@ public class PlayerScript : MonoBehaviour {
         {
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log("hello");
                 tapFinishPos = new Vector3(hit.point.x, 0.5f, hit.point.z);
 
                 cue.SetActive(true);
@@ -60,23 +59,26 @@ public class PlayerScript : MonoBehaviour {
 
                 //movement and rotation of the movement line and cue stick
                 float distPoints = Vector3.Distance(tapFinishPos, tapStartPos);
-                dir = tapFinishPos - tapStartPos;
-                Vector3 pos = (distPoints / 2f) * dir.normalized + tapStartPos;
-                hitLine.transform.position = pos;
-                cue.transform.position = pos;
-                float sizeFactor = hitLine.transform.localScale.x;
-                hitLine.transform.localScale = new Vector3(sizeFactor, distPoints/2f , sizeFactor);
-
-                if(dir.magnitude > 0.05f)
+                if (distPoints <= hitMaxDist)
                 {
-                    float angle = Mathf.Atan(dir.z / dir.x);
-                    angle = (180f * angle) / Mathf.PI;
-                    if(dir.x >= 0f)
+                    dir = tapFinishPos - tapStartPos;
+                    Vector3 pos = (distPoints / 2f) * dir.normalized + tapStartPos;
+                    hitLine.transform.position = pos;
+                    cue.transform.position = pos;
+                    float sizeFactor = hitLine.transform.localScale.x;
+                    hitLine.transform.localScale = new Vector3(sizeFactor, distPoints / 2f, sizeFactor);
+
+                    if (dir.magnitude > 0.05f)
                     {
-                        angle += 180f;
+                        float angle = Mathf.Atan(dir.z / dir.x);
+                        angle = (180f * angle) / Mathf.PI;
+                        if (dir.x >= 0f)
+                        {
+                            angle += 180f;
+                        }
+                        hitLine.transform.rotation = Quaternion.Euler(90f, 0f, angle + 90f);
+                        cue.transform.rotation = Quaternion.Euler(90f, 0f, angle + 90f);
                     }
-                    hitLine.transform.rotation = Quaternion.Euler(90f, 0f, angle + 90f);
-                    cue.transform.rotation = Quaternion.Euler(90f, 0f, angle + 90f);
                 }
             }
         }

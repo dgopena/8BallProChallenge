@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum StickMode
+{
+    CueOnly,
+    AllBalls
+}
+
 public class StickScript : MonoBehaviour {
     //more than anything this class controls collsion of the stick and the animation for the movement
     #region Movement variables
@@ -12,7 +18,7 @@ public class StickScript : MonoBehaviour {
     private float backSpeed = 10f; //how fast does it go back
     private float backFactor = 4f; //how back the cue goes
     private float forwSpeed = 46f; //how fast does it go forward
-    private float forwFactor = 20f; //how forward does the cue goes
+    private float forwFactor = 30f; //how forward does the cue goes
 
     private float startTime;
 
@@ -20,13 +26,13 @@ public class StickScript : MonoBehaviour {
     private Vector3 hitPos;
     #endregion
 
-    private float hitForce;
+    public StickMode mode = StickMode.CueOnly;
 
-    private Renderer rend;
+    private float hitForce;
 
     // Use this for initialization
     void Start () {
-        rend = transform.FindChild("Stick").GetComponent<Renderer>();
+
 	}
 	
 	// Update is called once per frame
@@ -53,6 +59,10 @@ public class StickScript : MonoBehaviour {
                 startPosition = transform.position;
                 startTime = Time.time;
                 movePhase++;
+            }
+            if(hitTarget == null) //in the case a target hasn't been set yet
+            {
+                TargetObj();
             }
         }
         else if(movePhase == 3) //post hitting back up
@@ -93,8 +103,19 @@ public class StickScript : MonoBehaviour {
         {
             if (hit.transform.tag == "Ball")
             {
-                hitTarget = hit.transform.gameObject;
-                hitPos = hit.point;
+                if (mode == StickMode.CueOnly)
+                {
+                    if (hit.transform.name == "Cue")
+                    {
+                        hitTarget = hit.transform.gameObject;
+                        hitPos = hit.point;
+                    }
+                }
+                else
+                {
+                    hitTarget = hit.transform.gameObject;
+                    hitPos = hit.point;
+                }
             }
         }
     }
